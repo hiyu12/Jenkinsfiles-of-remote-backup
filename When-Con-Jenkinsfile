@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven3'
+    }
+    parameters {
+      choice choices: ['compile', 'test', 'package'], description: 'Select environment ', name: 'deployEnv'
+    }
+    stages {
+        stage('Compile'){
+            when {
+                expression {
+                    params.deployEnv == 'compile'
+                }
+            }
+            steps {
+                git branch: 'main', credentialsId: 'git-login', url: 'https://github.com/hiyu12/hiyu-java-app.git'
+                sh 'mvn compile'
+            }
+        }
+        stage('Test'){
+            when {
+                expression {
+                    params.deployEnv == 'test'
+                }
+            }
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('package'){
+            when {
+                expression {
+                    params.deployEnv == 'package'
+                }
+            }
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+   post {
+        failure {
+           echo "Build is failed"
+   }
+}
+
+}
