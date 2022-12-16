@@ -1,0 +1,20 @@
+pipeline {
+    agent none
+    stages{
+        stage("Input"){
+            agent any
+            input {
+                message "What is your name?"
+                ok "submit"
+                parameters {
+                    string (description:"You are responsible for approval", name: "yrname")
+                }
+            }
+            steps {
+                echo "Hi ${yrname}"
+                echo "This is your first task"
+                sh 'hostname'
+            }
+        }
+    }
+}
