@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    parameters {
+      string defaultValue: 'Akash Suthar', description: 'my name', name: 'name'
+      string defaultValue: 'Ahmedabad', description: 'my city', name: 'city'
+    }
+    stages{
+        stage("param"){
+            steps {
+                echo " Hello ${name}, I am from ${city}"
+                echo " Hello ${params.name}, I am from ${params.city}"
+                
+            }
+        }
+    }
+}
