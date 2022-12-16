@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven3'
+    }
+    stages {
+        stage("SCM"){
+            steps {
+                git branch: 'main', credentialsId: 'git-login', url: 'https://github.com/hiyu12/hiyu-java-app.git'
+                stash 'source'
+            }
+        }
+        stage("Build") {
+            agent {
+                label 'linux-1'
+            }
+            steps {
+                unstash 'source'
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
